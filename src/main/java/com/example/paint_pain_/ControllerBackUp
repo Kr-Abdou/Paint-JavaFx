@@ -1,0 +1,104 @@
+package com.example.paint_pain_;
+
+import com.jfoenix.controls.JFXButton;
+import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.SplitPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+
+public class Controller {
+    @FXML
+    private SplitPane splitPane;
+    @FXML
+    private Canvas canvas;
+    @FXML
+    private JFXButton paintButton;
+    @FXML
+    private JFXButton eraseButton;
+    @FXML
+    private JFXButton lineButton;
+    @FXML
+    private ColorPicker colorPicker;
+    private GraphicsContext graphicsContext;
+    private Line currentLine;
+    private double startX,startY ;
+
+    public void initialize() {
+        graphicsContext = canvas.getGraphicsContext2D();
+        graphicsContext.setFill(Color.WHITE);
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        graphicsContext.setLineWidth(5);
+    }
+
+    @FXML
+    private void setColorPicker() {
+        colorPicker.setOnAction(event -> {
+            graphicsContext.setStroke(colorPicker.getValue());
+        });
+
+    }
+
+
+    private void MousePressedPrinting(MouseEvent mouseEvent) {
+            graphicsContext.beginPath();
+            graphicsContext.moveTo(mouseEvent.getX(), mouseEvent.getY());
+
+    }
+    private void MouseDraggedPrinting(MouseEvent mouseEvent) {
+
+            graphicsContext.lineTo(mouseEvent.getX(), mouseEvent.getY());
+            graphicsContext.stroke();
+
+    }
+    private void MouseReleasedPrinting(MouseEvent mouseEvent) {
+            graphicsContext.closePath();
+    }
+
+    private void MousePresseLines(MouseEvent mouseEvent) {
+
+    }
+
+    private void MouseDraggedLines(MouseEvent mouseEvent) {
+
+    }
+
+    private void MouseReleasedLines(MouseEvent mouseEvent) {
+
+    }
+
+    @FXML
+    private void togglePaintMode() {
+        paintButton.setDisable(true);
+        eraseButton.setDisable(false);
+        graphicsContext.setStroke(colorPicker.getValue());
+        canvas.setOnMousePressed(mouseEvent -> MousePressedPrinting(mouseEvent));
+        canvas.setOnMouseDragged(mouseEvent -> MouseDraggedPrinting(mouseEvent));
+        canvas.setOnMouseReleased(mouseEvent -> MouseReleasedPrinting(mouseEvent));
+
+    }
+
+    @FXML
+    private void toggleEraseMode(){
+        eraseButton.setDisable(true);
+        paintButton.setDisable(false);
+        graphicsContext.setStroke(Color.WHITE);
+        canvas.setOnMousePressed(mouseEvent -> MousePressedPrinting(mouseEvent));
+        canvas.setOnMouseDragged(mouseEvent -> MouseDraggedPrinting(mouseEvent));
+        canvas.setOnMouseReleased(mouseEvent -> MouseReleasedPrinting(mouseEvent));
+    }
+    @FXML
+    private void toggleLinseMode(){
+        eraseButton.setDisable(false);
+        paintButton.setDisable(false);
+        graphicsContext.setStroke(colorPicker.getValue());
+        canvas.setOnMousePressed(mouseEvent -> MousePresseLines(mouseEvent));
+        canvas.setOnMouseDragged(mouseEvent -> MouseDraggedLines(mouseEvent));
+        canvas.setOnMouseReleased(mouseEvent -> MouseReleasedLines(mouseEvent));
+    }
+
+}
